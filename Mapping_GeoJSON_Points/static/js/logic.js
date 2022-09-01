@@ -6,7 +6,8 @@ console.log("working");
 //let map = L.map('mapid').setView([34.0522, -118.2437], 14);
 //let map = L.map('mapid').setView([36.1733, -120.1794], 7);
 //let map = L.map('mapid').setView([37.6213, -122.3790], 5);
-let map = L.map('mapid').setView([37.5, -122.5], 10);
+//let map = L.map('mapid').setView([37.5, -122.5], 10);
+//let map = L.map('mapid').setView([30, 30], 2);
 
 // Line 5 does this:
 // 1. We're assigning the variable map to the object `L.map()`, and we'll instantiate 
@@ -18,9 +19,7 @@ let map = L.map('mapid').setView([37.5, -122.5], 10);
 // An alternate to the `setView!)` method that is useful when we need to add multiple tile layers or a background image of our map(s):
 // Create the map object with a center and zoom level.
 // let map = L.map("mapid", {
-//     center: [
-//       40.7, -94.5
-//     ],
+//     center: [40.7, -94.5],
 //     zoom: 4
 //   });
 
@@ -64,7 +63,7 @@ let sanFranAirport =
 ]};
 
 // Grabbing our GeoJSON data.
-L.geoJSON(sanFranAirport).addTo(map);
+//L.geoJSON(sanFranAirport).addTo(map);
 //Now adding the GeoJSON data with a marker using pointToLayer()
 // L.geoJSON(sanFranAirport, {
 //     pointToLayer: function(feature, latlng) {
@@ -78,12 +77,12 @@ L.geoJSON(sanFranAirport).addTo(map);
 // }).addTo(map);
 
 // Use onEachFeature callback function to add a popup marker for each feature and add data from the properties of the JS object
-L.geoJSON(sanFranAirport, {
-    onEachFeature: function(feature, layer) {
-      console.log(layer);
-      layer.bindPopup("<h4>Airport code: " + feature.properties.faa + "</h4> <hr> <h4>Airport name: " + feature.properties.name + "</h4>");
-     }
-}).addTo(map);
+// L.geoJSON(sanFranAirport, {
+//     onEachFeature: function(feature, layer) {
+//       console.log(layer);
+//       layer.bindPopup("<h4>Airport code: " + feature.properties.faa + "</h4> <hr> <h4>Airport name: " + feature.properties.name + "</h4>");
+//      }
+// }).addTo(map);
 
 // Create a polyline for the flight route LAX-SFO-SLC-SEA
 // L.polyline(line, {
@@ -152,6 +151,24 @@ attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStree
 });
 
 
+// To have the option to toggle between two different maps on the site:
+// Create a base layer that holds both maps. ( the Street and Dark keys set the text for the radial buttons on the web page)
+let baseMaps = {
+    Street: streets,
+    Dark: dark
+};
+
+
+// Create the map object with a center and zoom level.
+let map = L.map("mapid", {
+    center: [30, 30],
+    zoom: 2,
+    layers: [streets]
+  });
+
+  // Pass our map layers into our layers control and add the layers control to the map.
+  L.control.layers(baseMaps).addTo(map);
+
 
 // add the 'streets' tile layer to the map.
 //streets.addTo(map);
@@ -159,7 +176,37 @@ attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStree
 //satellite.addTo(map);
 //light.addTo(map);
 //nightNav.addTo(map);
-outdoors.addTo(map);
+//outdoors.addTo(map);
+
+// Accessing the airport GeoJSON URL
+let airportData = "https://raw.githubusercontent.com/mewers2/Mapping_Earthquakes/Mapping_GeoJSON_Points/Mapping_GeoJSON_Points/static/js/majorAirports.json";
+
+// // Grabbing our GeoJSON data using the GeoJSON URL and d3.json() method.
+d3.json(airportData).then(function(data) {
+    console.log(data);
+  // Skill drill: create a GeoJSON layer with the retrieved data.
+  L.geoJSON(data, {
+    onEachFeature: function(feature, layer){
+        console.log(layer);
+        layer.bindPopup("<h4>Airport code: " + feature.properties.faa + "</h4> <hr> <h4>Airport name: " + feature.properties.name + "</h4>");
+    }
+  })
+  .addTo(map);
+});
+
+// Grabbing our GeoJSON data using the GeoJSON URL and d3.json() method.
+// d3.json(airportData).then(function(data) {
+//     console.log(data);
+//   // Skill drill: create a GeoJSON layer with the retrieved data.
+//   L.geoJSON(data).addTo(map);
+// });
+
+// L.geoJSON(sanFranAirport, {
+//     onEachFeature: function(feature, layer) {
+//       console.log(layer);
+//       layer.bindPopup("<h4>Airport code: " + feature.properties.faa + "</h4> <hr> <h4>Airport name: " + feature.properties.name + "</h4>");
+//      }
+// }).addTo(map);
 
 // // Add a marker to the map for Los Angeles, California.
 //let marker = L.marker([34.0522, -118.2437]).addTo(map);
