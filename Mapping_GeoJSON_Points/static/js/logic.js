@@ -5,7 +5,8 @@ console.log("working");
 //var map = L.map('mapid').setView([40.7, -94.5], 4);
 //let map = L.map('mapid').setView([34.0522, -118.2437], 14);
 //let map = L.map('mapid').setView([36.1733, -120.1794], 7);
-let map = L.map('mapid').setView([37.6213, -122.3790], 5);
+//let map = L.map('mapid').setView([37.6213, -122.3790], 5);
+let map = L.map('mapid').setView([37.5, -122.5], 10);
 
 // Line 5 does this:
 // 1. We're assigning the variable map to the object `L.map()`, and we'll instantiate 
@@ -40,10 +41,54 @@ let line = [
     [40.6413, -73.7781]
 ];
 
-// Create a polyline for the flight route LAX-SFO-SLC-SEA
-L.polyline(line, {
-    color: "blue", weight: 4, opacity: 0.5, dashArray: 8
+
+
+// Add GeoJSON data.
+let sanFranAirport =
+{"type":"FeatureCollection","features":[{
+    "type":"Feature",
+    "properties":{
+        "id":"3469",
+        "name":"San Francisco International Airport",
+        "city":"San Francisco",
+        "country":"United States",
+        "faa":"SFO",
+        "icao":"KSFO",
+        "alt":"13",
+        "tz-offset":"-8",
+        "dst":"A",
+        "tz":"America/Los_Angeles"},
+        "geometry":{
+            "type":"Point",
+            "coordinates":[-122.375,37.61899948120117]}}
+]};
+
+// Grabbing our GeoJSON data.
+L.geoJSON(sanFranAirport).addTo(map);
+//Now adding the GeoJSON data with a marker using pointToLayer()
+// L.geoJSON(sanFranAirport, {
+//     pointToLayer: function(feature, latlng) {
+//         console.log(feature);
+//         return L.marker(latlng)
+//         //Add the city to the popup marker (parse the GeoJSON with dot notation)
+//         //.bindPopup("<h2>" + feature.properties.city + "</h2>");
+//         //Skill Drill add a popup on the san francisco airport displaying the city, state, and name of airport
+//         .bindPopup("<h3>" + feature.properties.name + "</h3> <hr> <h4> " + feature.properties.city + ", " + feature.properties.country + "</h4>");
+//     }
+// }).addTo(map);
+
+// Use onEachFeature callback function to add a popup marker for each feature and add data from the properties of the JS object
+L.geoJSON(sanFranAirport, {
+    onEachFeature: function(feature, layer) {
+      console.log(layer);
+      layer.bindPopup("<h4>Airport code: " + feature.properties.faa + "</h4> <hr> <h4>Airport name: " + feature.properties.name + "</h4>");
+     }
 }).addTo(map);
+
+// Create a polyline for the flight route LAX-SFO-SLC-SEA
+// L.polyline(line, {
+//     color: "blue", weight: 4, opacity: 0.5, dashArray: 8
+// }).addTo(map);
 
 // We create the tile layer that will be the background of our map.
 // let streets = L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
@@ -89,11 +134,32 @@ attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStree
 
 });
 
+
+// Create the tile layer that will be the background of the map.
+let nightNav = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/navigation-night-v1/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+    maxZoom: 18,
+    accessToken: API_KEY
+
+});
+
+// Create the tile layer that will be the background of the map.
+let outdoors = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/outdoors-v11/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+    maxZoom: 18,
+    accessToken: API_KEY
+
+});
+
+
+
 // add the 'streets' tile layer to the map.
 //streets.addTo(map);
 //dark.addTo(map);
 //satellite.addTo(map);
-light.addTo(map);
+//light.addTo(map);
+//nightNav.addTo(map);
+outdoors.addTo(map);
 
 // // Add a marker to the map for Los Angeles, California.
 //let marker = L.marker([34.0522, -118.2437]).addTo(map);
@@ -125,5 +191,7 @@ light.addTo(map);
 //     .bindPopup("<h2>" + city.city + ", " + city.state + "</h2> <hr> <h3>Population " + city.population.toLocaleString() + "</h3>")
 //     .addTo(map);
 // });
+
+
 
 
