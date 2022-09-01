@@ -143,6 +143,14 @@ attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStree
 });
 
 // Create the tile layer that will be the background of the map.
+let dayNav = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/navigation-day-v1/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+    maxZoom: 18,
+    accessToken: API_KEY
+
+});
+
+// Create the tile layer that will be the background of the map.
 let outdoors = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/outdoors-v11/tiles/{z}/{x}/{y}?access_token={accessToken}', {
 attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
     maxZoom: 18,
@@ -153,21 +161,31 @@ attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStree
 
 // To have the option to toggle between two different maps on the site:
 // Create a base layer that holds both maps. ( the Street and Dark keys set the text for the radial buttons on the web page)
-let baseMaps = {
-    Street: streets,
-    Dark: dark
+// let baseMaps = {
+//     Street: streets,
+//     Dark: dark
+// };
+
+// let baseMaps2 = {
+//     Light: light,
+//     Dark: dark
+// };
+
+let baseMaps3 = {
+    Light: dayNav,
+    Dark: nightNav
 };
 
 
 // Create the map object with a center and zoom level.
 let map = L.map("mapid", {
-    center: [30, 30],
+    center: [44.0, -80.0],//[30, 30],
     zoom: 2,
-    layers: [streets]
+    layers: [nightNav]
   });
 
   // Pass our map layers into our layers control and add the layers control to the map.
-  L.control.layers(baseMaps).addTo(map);
+  L.control.layers(baseMaps3).addTo(map);
 
 
 // add the 'streets' tile layer to the map.
@@ -179,20 +197,64 @@ let map = L.map("mapid", {
 //outdoors.addTo(map);
 
 // Accessing the airport GeoJSON URL
-let airportData = "https://raw.githubusercontent.com/mewers2/Mapping_Earthquakes/Mapping_GeoJSON_Points/Mapping_GeoJSON_Points/static/js/majorAirports.json";
+// let airportData = "https://raw.githubusercontent.com/mewers2/Mapping_Earthquakes/Mapping_GeoJSON_Points/Mapping_GeoJSON_Points/static/js/majorAirports.json";
+let torontoData = "https://raw.githubusercontent.com/mewers2/Mapping_Earthquakes/Mapping_GeoJson_Linestrings/Mapping_GeoJSON_Linestrings/static/js/torontoRoutes.json";
 
 // // Grabbing our GeoJSON data using the GeoJSON URL and d3.json() method.
-d3.json(airportData).then(function(data) {
+// d3.json(torontoData).then(function(data) {
+//     console.log(data);
+//   // Skill drill: create a GeoJSON layer with the retrieved data.
+//   L.geoJSON(data).addTo(map);
+// });
+
+// Grabbing our GeoJSON data using the GeoJSON URL and d3.json() method. Style the lines with a color and weight option:
+// d3.json(torontoData).then(function(data) {
+//     console.log(data);
+//   // Skill drill: create a GeoJSON layer with the retrieved data.
+//   L.geoJSON(data, {
+//     color: '#ffffa1',
+//     weight: 2,
+//     onEachFeature: function(feature, layer){
+//         console.log(layer);
+//         layer.bindPopup("<h3>Airline: " + feature.properties.airline + "</h3> <hr> <h3>Destination: " + feature.properties.dst + "</h3>");
+//     }
+//   })
+//   .addTo(map);
+// });
+
+// Create a style variable to style the lines in a simpler way:
+// Create a style for the lines.
+let myStyle = {
+    color: "#ffffa1",
+    weight: 2
+}
+
+d3.json(torontoData).then(function(data) {
     console.log(data);
   // Skill drill: create a GeoJSON layer with the retrieved data.
   L.geoJSON(data, {
+  style: myStyle,
     onEachFeature: function(feature, layer){
         console.log(layer);
-        layer.bindPopup("<h4>Airport code: " + feature.properties.faa + "</h4> <hr> <h4>Airport name: " + feature.properties.name + "</h4>");
+        layer.bindPopup("<h3>Airline: " + feature.properties.airline + "</h3> <hr> <h3>Destination: " + feature.properties.dst + "</h3>");
     }
   })
   .addTo(map);
 });
+
+
+// // Grabbing our GeoJSON data using the GeoJSON URL and d3.json() method.
+// d3.json(airportData).then(function(data) {
+//     console.log(data);
+//   // Skill drill: create a GeoJSON layer with the retrieved data.
+//   L.geoJSON(data, {
+//     onEachFeature: function(feature, layer){
+//         console.log(layer);
+//         layer.bindPopup("<h4>Airport code: " + feature.properties.faa + "</h4> <hr> <h4>Airport name: " + feature.properties.name + "</h4>");
+//     }
+//   })
+//   .addTo(map);
+// });
 
 // Grabbing our GeoJSON data using the GeoJSON URL and d3.json() method.
 // d3.json(airportData).then(function(data) {
