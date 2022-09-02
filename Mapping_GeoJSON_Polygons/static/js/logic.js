@@ -185,7 +185,7 @@ let baseMaps4 = {
 let map = L.map("mapid", {
     center: [43.7, -79.3],//[44.0, -80.0],//[30, 30],
     zoom: 11,
-    layers: [satellite]
+    layers: [streets]
   });
 
   // Pass our map layers into our layers control and add the layers control to the map.
@@ -204,7 +204,29 @@ let map = L.map("mapid", {
 // let airportData = "https://raw.githubusercontent.com/mewers2/Mapping_Earthquakes/Mapping_GeoJSON_Points/Mapping_GeoJSON_Points/static/js/majorAirports.json";
 // let torontoData = "https://raw.githubusercontent.com/mewers2/Mapping_Earthquakes/Mapping_GeoJson_Linestrings/Mapping_GeoJSON_Linestrings/static/js/torontoRoutes.json";
 // Accessing the Toronto neighboroods GeoJSON URL.
-let torontoHoods = "";
+let torontoHoods = "https://raw.githubusercontent.com/mewers2/Mapping_Earthquakes/Mappint_GeoJSON_Polygons/Mapping_GeoJSON_Polygons/static/js/torontoNeighborhoods.json";
+
+// // Grabbing our GeoJSON data using the GeoJSON URL and d3.json() method.
+// d3.json(torontoHoods).then(function(data) {
+//     console.log(data);
+//   // Skill drill: create a GeoJSON layer with the retrieved data.
+//   L.geoJSON(data).addTo(map);
+// });
+
+// Grabbing our GeoJSON data using the GeoJSON URL and d3.json() method. Style the lines with a color and weight option:
+// d3.json(torontoHoods).then(function(data) {
+//     console.log(data);
+//   // Skill drill: create a GeoJSON layer with the retrieved data.
+//   L.geoJSON(data, {
+//     color: '#ffffa1',
+//     weight: 1,
+//     onEachFeature: function(feature, layer){
+//         console.log(layer);
+//         layer.bindPopup("<h3>Airline: " + feature.properties.airline + "</h3> <hr> <h3>Destination: " + feature.properties.dst + "</h3>");
+//     }
+//   })
+//   .addTo(map);
+// });
 
 // // Grabbing our GeoJSON data using the GeoJSON URL and d3.json() method.
 // d3.json(torontoData).then(function(data) {
@@ -231,18 +253,19 @@ let torontoHoods = "";
 // Create a style variable to style the lines in a simpler way:
 // Create a style for the lines.
 let myStyle = {
-    color: "#ffffa1",
-    weight: 2
+    fillColor: "yellow",
+    weight: 1,
+    color: "blue"
 }
 
-d3.json(torontoData).then(function(data) {
+d3.json(torontoHoods).then(function(data) {
     console.log(data);
   // Skill drill: create a GeoJSON layer with the retrieved data.
   L.geoJSON(data, {
-  style: myStyle,
+    style: myStyle,
     onEachFeature: function(feature, layer){
         console.log(layer);
-        layer.bindPopup("<h3>Airline: " + feature.properties.airline + "</h3> <hr> <h3>Destination: " + feature.properties.dst + "</h3>");
+        layer.bindPopup("<h3>Neighborhood: " + feature.properties.AREA_NAME + "</h3>");
     }
   })
   .addTo(map);
