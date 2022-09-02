@@ -158,7 +158,6 @@ attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStree
 
 });
 
-
 // To have the option to toggle between two different maps on the site:
 // Create a base layer that holds both maps. ( the Street and Dark keys set the text for the radial buttons on the web page)
 // let baseMaps = {
@@ -171,21 +170,26 @@ attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStree
 //     Dark: dark
 // };
 
-let baseMaps3 = {
-    Light: dayNav,
-    Dark: nightNav
+// let baseMaps3 = {
+//     Light: light,
+//     Dark: nightNav
+// };
+
+let baseMaps4 = {
+    "streets": streets,
+    "Satellite Streets": satellite
 };
 
 
 // Create the map object with a center and zoom level.
 let map = L.map("mapid", {
-    center: [44.0, -80.0],//[30, 30],
-    zoom: 2,
-    layers: [nightNav]
+    center: [43.7, -79.3],//[44.0, -80.0],//[30, 30],
+    zoom: 11,
+    layers: [satellite]
   });
 
   // Pass our map layers into our layers control and add the layers control to the map.
-  L.control.layers(baseMaps3).addTo(map);
+  L.control.layers(baseMaps4).addTo(map);
 
 
 // add the 'streets' tile layer to the map.
@@ -198,7 +202,9 @@ let map = L.map("mapid", {
 
 // Accessing the airport GeoJSON URL
 // let airportData = "https://raw.githubusercontent.com/mewers2/Mapping_Earthquakes/Mapping_GeoJSON_Points/Mapping_GeoJSON_Points/static/js/majorAirports.json";
-let torontoData = "https://raw.githubusercontent.com/mewers2/Mapping_Earthquakes/Mapping_GeoJson_Linestrings/Mapping_GeoJSON_Linestrings/static/js/torontoRoutes.json";
+// let torontoData = "https://raw.githubusercontent.com/mewers2/Mapping_Earthquakes/Mapping_GeoJson_Linestrings/Mapping_GeoJSON_Linestrings/static/js/torontoRoutes.json";
+// Accessing the Toronto neighboroods GeoJSON URL.
+let torontoHoods = "";
 
 // // Grabbing our GeoJSON data using the GeoJSON URL and d3.json() method.
 // d3.json(torontoData).then(function(data) {
