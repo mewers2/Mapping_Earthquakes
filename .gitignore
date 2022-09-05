@@ -1,2 +1,6 @@
 # Ignore the config.js file(s).
 config.js
+
+# Ignore the extra logic files
+logic.js
+major_eq_starter_logic.js
